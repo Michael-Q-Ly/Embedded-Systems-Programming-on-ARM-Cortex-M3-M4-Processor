@@ -1,0 +1,7 @@
+<<<<<<< HEAD
+"./Src/main.o"
+=======
+"./Src/main_1.o"
+>>>>>>> a7e49dd (Add Example 12 (two versions):)
+"./Src/sysmem.o"
+"./Startup/startup_stm32f429zitx.o"
