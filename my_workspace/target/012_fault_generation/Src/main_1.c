@@ -32,7 +32,7 @@ void MemManage_Handler( void ) ;
 void BusFault_Handler( void ) ;
 __attribute__( (naked) ) void UsageFault_Handler( void ) ;
 void UsageFault_Handler_c( uint32_t *pBaseStackFrame ) ;
-void fun_divide( int x, int y ) ;
+int fun_divide( int x, int y ) ;
 
 int main( void ) {
 	initialise_monitor_handles() ;									// Debugger
@@ -99,7 +99,7 @@ void UsageFault_Handler_c( uint32_t *pBaseStackFrame ) {						// Callee
 	while( 1 ) ;
 }
 
-void fun_divide( int x, int y ) {
+int fun_divide( int x, int y ) {
 	return ( x / y ) ;
 }
 

@@ -1,3 +1,7 @@
+<<<<<<< HEAD
 "./Src/main.o"
+=======
+"./Src/main_1.o"
+>>>>>>> 013_svc_number
 "./Src/sysmem.o"
 "./Startup/startup_stm32f429zitx.o"
