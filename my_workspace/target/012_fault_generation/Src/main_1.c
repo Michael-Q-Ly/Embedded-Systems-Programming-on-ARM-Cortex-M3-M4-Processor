@@ -100,6 +100,7 @@ void UsageFault_Handler_c( uint32_t *pBaseStackFrame ) {						// Callee
 }
 
 int fun_divide( int x, int y ) {
+
 	return ( x / y ) ;
 }
 
