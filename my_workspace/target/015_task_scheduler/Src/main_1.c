@@ -17,6 +17,8 @@ uint32_t psp_of_tasks[MAX_TASKS] = {	T1_STACK_START
 
 uint32_t task_handlers[MAX_TASKS] ;
 
+uint8_t current_task = 0 ;										// Task1 is running
+
 /* Function Prototypes */
 extern void initialise_monitor_handles( void ) ;								// Debugger
 void task1_handler( void ) ;                                                    				// This is task1
@@ -27,7 +29,14 @@ void task4_handler( void ) ;                                                    
 __attribute__( (naked) ) void init_scheduler_stack( uint32_t sched_top_of_stack ) ;
 void init_tasks_stack( void ) ;
 void init_systick_timer( uint32_t tick_hz ) ;
+void enable_processor_faults( void ) ;
+__attribute__( (naked) ) void switch_sp_to_psp( void ) ;
+uint32_t get_psp_value( void ) ;
 void SysTick_Handler( void ) ;											// This is our scheduler--what we use to do context switching
+
+void HardFault_Handler( void ) ;
+void MemManage_Handler( void ) ;
+void BusFault_Handler( void ) ;
 
 int main(void)
 {
@@ -39,16 +48,21 @@ int main(void)
 	init_scheduler_stack( SCHED_STACK_START ) ;
 	
 	// Array-filling; capturing addresses of different task handlers
-	task_handlers[0] = ( uint32_t) ( task1_handler ) ;
-	task_handlers[1] = ( uint32_t) ( task2_handler ) ;
-	task_handlers[2] = ( uint32_t) ( task3_handler ) ;
-	task_handlers[3] = ( uint32_t) ( task4_handler ) ;
+	task_handlers[0] = ( uint32_t )( task1_handler ) ;
+	task_handlers[1] = ( uint32_t )( task2_handler ) ;
+	task_handlers[2] = ( uint32_t )( task3_handler ) ;
+	task_handlers[3] = ( uint32_t )( task4_handler ) ;
 
 	// Task stack initialization to store the dummy frames  
 	init_tasks_stack() ;
 
 	// Generate SysTick timer exception
 	init_systick_timer( TICK_HZ ) ;
+	
+	// Switch from MSP to PSP
+	switch_sp_to_psp() ;
+
+	task1_handler() ;
 
 	/* Loop forever */
 	for(;;);
@@ -140,7 +154,57 @@ void init_tasks_stack( void ) {
 	}
 }
 
+void enable_processor_faults( void ) {
+	uint32_t *pSHCSR = ( uint32_t* )( 0xE000ED24 ) ;						// System Handler Control & State Register
+	*pSHCSR |= ( 1 << 16 ) ;	// Memory Manage
+	*pSHCSR |= ( 1 << 17 ) ;	// Bus Fault
+	*pSHCSR |= ( 1 << 18 ) ;	// Usage Fault
+}
+
+uint32_t get_psp_value( void ) {
+	return psp_of_tasks[current_task] ;
+}
+
+__attribute__( (naked) ) void switch_sp_to_psp( void ) {
+	// 1. Initialize the PSP with TASK1 stack start
+
+	// Get the value of PSP of current_task
+	/**
+	 * Note that we are still using MSP as our SP because we have not yet executed the switch of sp to psp!
+	 *
+	 * Also, since this function is called from main(), LR is holding some value that connects to main(). We call
+	 * get_psp_value() in the function, though, so LR gets corrupted.
+	 * Thus, we have to PUSH (save) LR because we want it later. We then pop it back.
+	 */
+	__asm volatile ( "PUSH {LR} " ) ;								// Preserve LR, which connects back to main()
+	__asm volatile ( "BL get_psp_value" ) ;								// Branch and link to come back to the function; branch only takes you to the function
+	__asm volatile ( "MSR PSP, R0" ) ;								// Initialize PSP
+	__asm volatile ( "POP {LR} " ) ;								// Pops back LR value
+
+	// 2. Change SP to PSP using CONTROL register
+	// The CONTROL register is a special register, thus the function must be a naked function
+	__asm volatile ( "MOV R0, #0x02" ) ;								// Refer to M4 User Manual: Switch to PSP
+	__asm volatile ( "MSR CONTROL, R0" ) ;
+	__asm volatile ( "BX LR" ) ;									// LR will be copied into PC, which takes us back to main()
+}
+
 void SysTick_Handler( void ) {
 
+}
+
+// 2. Implement the fault handlers
+void HardFault_Handler( void ) {
+	fprintf( stderr, "Exception: Hardfault\n" ) ;
+	while( 1 ) ;
+}
+
+void MemManage_Handler( void ) {
+	fprintf( stderr, "Exception: MemManage\n" ) ;
+	while( 1 ) ;
+}
+
+void BusFault_Handler( void ) {
+	fprintf( stderr, "Exception: Busfault\n" ) ;
+	while( 1 ) ;
 }
 
