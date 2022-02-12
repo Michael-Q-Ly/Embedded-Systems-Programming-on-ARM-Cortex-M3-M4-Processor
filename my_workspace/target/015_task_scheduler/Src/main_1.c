@@ -32,7 +32,8 @@ void init_systick_timer( uint32_t tick_hz ) ;
 void enable_processor_faults( void ) ;
 __attribute__( (naked) ) void switch_sp_to_psp( void ) ;
 uint32_t get_psp_value( void ) ;
-void SysTick_Handler( void ) ;											// This is our scheduler--what we use to do context switching
+void update_next_task( void ) ;
+__attribute__( (naked) ) void SysTick_Handler( void ) ;											// This is our scheduler--what we use to do context switching
 
 void HardFault_Handler( void ) ;
 void MemManage_Handler( void ) ;
@@ -165,6 +166,15 @@ uint32_t get_psp_value( void ) {
 	return psp_of_tasks[current_task] ;
 }
 
+void save_psp_value( uint32_t current_psp_value ) {
+	psp_of_tasks[current_task] = current_psp_value ;
+}
+
+void update_next_task( void ) {
+	current_task++ ;
+	current_task %= MAX_TASKS ;									// Task 0 through 3
+}
+
 __attribute__( (naked) ) void switch_sp_to_psp( void ) {
 	// 1. Initialize the PSP with TASK1 stack start
 
@@ -188,8 +198,52 @@ __attribute__( (naked) ) void switch_sp_to_psp( void ) {
 	__asm volatile ( "BX LR" ) ;									// LR will be copied into PC, which takes us back to main()
 }
 
-void SysTick_Handler( void ) {
+__attribute__( (naked) ) void SysTick_Handler( void ) {
 
+	/* Save the context of current task */
+
+	// 1. Get current running task's PSP value
+	__asm volatile ( "MRS R0, PSP" ) ;	
+	// 2. Using that PSP value, store SF2 (R4 to R11)
+	__asm volatile ( "STMDB R0!, {R4-R11}" ) ;							// Store multiple registers into memory; "!" allows R0 to get updated after each store
+	__asm volatile ( "PUSH {LR}" ) ;
+	// 3. Save the current value of PSP
+	__asm volatile ( "BL save_psp_value" ) ;	
+
+
+
+	/* Retrieve the context of the next task */
+	
+	// 1. Decide next task to run
+	__asm volatile ( "BL update_next_task" ) ;		
+	// 2. Get its past PSP value
+	__asm volatile ( "BL get_psp_value" ) ;
+	// 3. Using that PSP value, retrieve SF2 (R4 to R11)
+	__asm volatile ( "LDMIA R0!, {R4-R11}" ) ;
+	// 4. Update PSP and exit
+	__asm volatile ( "MSR PSP, R0" ) ;
+	__asm volatile ( "POP {LR}" ) ;
+	__asm volatile ( "BX LR" ) ;
+
+	/**
+	 * Summary of function:
+	 * Saving context of current task:
+	 * We get the current running task's private stack pointer by storing special register
+	 * PSP into general register R0.
+	 * We then store multiple registers (R4 through R11) into R0, but we decrement and refresh R0 after each store.
+	 * We then preserve LR with a PUSH instruction.
+	 * Next, we branch and link to save_psp_value. Why? Because we must come back to SysTick Handler AFTER we exit the
+	 * function we are calling.
+	 *
+	 * Retrieving the context of the next task:
+	 * We do another branch and link with function update_next_task.
+	 * We then get the next PSP value by doing another branch and link with get_psp_value, which returns
+	 * psp_of_tasks[current_task].
+	 * Next we load multiple registers (R4 through R11) and update/increment R0 after each store.
+	 * We then store the general register R0 into PSP
+	 * and then POP LR.
+	 * Finally, we do a branch indirect LR so that we can return to main()
+	 */
 }
 
 // 2. Implement the fault handlers
