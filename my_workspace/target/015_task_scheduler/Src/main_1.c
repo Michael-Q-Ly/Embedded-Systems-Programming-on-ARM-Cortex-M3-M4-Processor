@@ -9,14 +9,6 @@
 #include <stdint.h>
 #include "main_1.h"
 
-uint32_t psp_of_tasks[MAX_TASKS] = {	T1_STACK_START
-					,	T2_STACK_START
-					,	T3_STACK_START
-					,	T4_STACK_START
-} ;
-
-uint32_t task_handlers[MAX_TASKS] ;
-
 uint8_t current_task = 0 ;											// Task1 is running
 
 /* Function Prototypes */
@@ -39,6 +31,15 @@ void HardFault_Handler( void ) ;
 void MemManage_Handler( void ) ;
 void BusFault_Handler( void ) ;
 
+typedef struct {
+	uint32_t psp_value ;
+	uint32_t block_count ;
+	uint8_t current_state ;
+	void ( *task_handler )( void ) ;
+} TCB_t ;
+
+TCB_t user_tasks[MAX_TASKS] ;
+
 int main(void)
 {
 	initialise_monitor_handles() ;                                          				// Debugger
@@ -57,6 +58,9 @@ int main(void)
 	// Task stack initialization to store the dummy frames  
 	init_tasks_stack() ;
 
+    // Initialize all of the LEDs
+    led_init_all() ;
+
 	// Generate SysTick timer exception
 	init_systick_timer( TICK_HZ ) ;
 	
@@ -73,13 +77,20 @@ int main(void)
 void task1_handler( void ) {
 	while ( 1 ) {
 		printf( "This is task1\n" ) ;
-        led_on() ;
+        led_on( LED_GREEN ) ;
+        delay( DELAY_COUNT_250MS ) ;
+        led_off( LED_GREEN ) ;
+        delay( DELAY_COUNT_250MS ) ;
 	}
 }
 
 void task2_handler( void ) {
 	while ( 1 ) {
 		printf( "This is task2\n" ) ;
+        led_on( LED_RED ) ;
+        delay( DELAY_COUNT_1S ) ;
+        led_off( LED_RED ) ;
+        delay( DELAY_COUNT_1S ) ;
 
 	}
 }

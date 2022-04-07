@@ -3,14 +3,11 @@
 
 #include "led.h"
 #define STM32F42xx
-// Software delay; wastes clock cycles
-// TODO: Maybe use a hardware timer instead in the future
-void delay(uint32_t count) {
-	for( uint32_t i = 0 ; i < count ; i++ ) ;
-}
 
-void led_init_all(void)
-{
+/*
+ * This function initializes the on-board LEDs
+ */
+void led_init_all( void ) {
 
 	uint32_t *pRccAhb1enr   = ( uint32_t* )( 0x40023830 ) ;
 	uint32_t *pGpioGModeReg = ( uint32_t* )( 0x40021800 ) ;
@@ -35,6 +32,14 @@ void led_init_all(void)
 	led_off( LED_RED ) ;
 	led_off( LED_BLUE ) ;
 #endif /* STM32F42xx */
+}
+
+// Software delay; wastes clock cycles
+// TODO: Maybe use a hardware timer instead in the future
+/*
+ * This function creates a software delay for the LEDs */
+void delay( uint32_t count ) {
+	for( uint32_t i = 0 ; i < count ; i++ ) ;
 }
 
 /*
