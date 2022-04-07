@@ -17,7 +17,7 @@ uint32_t psp_of_tasks[MAX_TASKS] = {	T1_STACK_START
 
 uint32_t task_handlers[MAX_TASKS] ;
 
-uint8_t current_task = 0 ;										// Task1 is running
+uint8_t current_task = 0 ;											// Task1 is running
 
 /* Function Prototypes */
 extern void initialise_monitor_handles( void ) ;								// Debugger
@@ -73,6 +73,7 @@ int main(void)
 void task1_handler( void ) {
 	while ( 1 ) {
 		printf( "This is task1\n" ) ;
+        led_on() ;
 	}
 }
 
@@ -110,7 +111,7 @@ void init_systick_timer( uint32_t tick_hz ) {
 
 
 	// Clear the value of SVR
-	*pSRVR &= ~ ( 0x00FFFFFFFF) ;									// Only 24 bits are valid in this register
+	*pSRVR &= ~ ( 0x00FFFFFFFF ) ;									// Only 24 bits are valid in this register
 	// Load the value into SVR
 	*pSRVR |= count_value ;
 
@@ -132,7 +133,7 @@ __attribute__( (naked) ) void init_scheduler_stack( uint32_t sched_top_of_stack 
 void init_tasks_stack( void ) {
 
 	uint32_t *pPSP ;
-	for (int i = 0 ; i < MAX_TASKS ; i++ ) {
+	for ( int i = 0 ; i < MAX_TASKS ; i++ ) {
 		pPSP = ( uint32_t* )( psp_of_tasks[i] ) ;
 		
 		pPSP-- ;										// xPSR
