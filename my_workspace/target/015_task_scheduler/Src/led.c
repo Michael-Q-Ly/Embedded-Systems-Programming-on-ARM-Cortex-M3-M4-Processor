@@ -1,6 +1,7 @@
 // led.c
 // STM32F429ZIT DISC1 only has 2 LEDS: Green (PG13) and Red (PG14)
 
+#include "main.h"
 #include "led.h"
 #define STM32F42xx
 
@@ -48,7 +49,7 @@ void delay( uint32_t count ) {
 void led_on( uint8_t led_no ) {
 	// Add the Output Data Register (ODR) offset to the base address of GPIO G clk
 	uint32_t *pGpioGDataReg = ( uint32_t* )( 0x40021814 ) ;
-	*pGpiodDataReg |= ( 1 << led_no ) ;
+	*pGpioGDataReg |= ( 1 << led_no ) ;
 
 }
 
@@ -57,5 +58,5 @@ void led_on( uint8_t led_no ) {
  */
 void led_off( uint8_t led_no ) {
 	uint32_t *pGpioGDataReg = ( uint32_t* )( 0x40021814 ) ;
-	*pGpiodDataReg &= ~( 1 << led_no ) ;
+	*pGpioGDataReg &= ~( 1 << led_no ) ;
 }
