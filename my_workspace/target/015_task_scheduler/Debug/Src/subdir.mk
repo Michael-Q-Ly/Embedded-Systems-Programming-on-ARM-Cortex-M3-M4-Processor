@@ -5,14 +5,17 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Src/led.c \
 ../Src/main_1.c \
 ../Src/sysmem.c 
 
 OBJS += \
+./Src/led.o \
 ./Src/main_1.o \
 ./Src/sysmem.o 
 
 C_DEPS += \
+./Src/led.d \
 ./Src/main_1.d \
 ./Src/sysmem.d 
 
@@ -24,7 +27,7 @@ Src/%.o: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/main_1.d ./Src/main_1.o ./Src/sysmem.d ./Src/sysmem.o
+	-$(RM) ./Src/led.d ./Src/led.o ./Src/main_1.d ./Src/main_1.o ./Src/sysmem.d ./Src/sysmem.o
 
 .PHONY: clean-Src
 
