@@ -25,7 +25,11 @@ OBJS += \
 
 C_DEPS += \
 ./Src/main_1.d \
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
 ./Src/sysmem.d 
 
 
@@ -40,7 +44,11 @@ clean-Src:
 	-$(RM) ./Src/main.d ./Src/main.o ./Src/sysmem.d ./Src/sysmem.o
 =======
 	-$(RM) ./Src/main_1.d ./Src/main_1.o ./Src/sysmem.d ./Src/sysmem.o
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
 
 .PHONY: clean-Src
 

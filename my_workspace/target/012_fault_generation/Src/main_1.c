@@ -33,10 +33,14 @@ void BusFault_Handler( void ) ;
 __attribute__( (naked) ) void UsageFault_Handler( void ) ;
 void UsageFault_Handler_c( uint32_t *pBaseStackFrame ) ;
 <<<<<<< HEAD
+<<<<<<< HEAD
 void fun_divide( int x, int y ) ;
 =======
 int fun_divide( int x, int y ) ;
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+int fun_divide( int x, int y ) ;
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
 
 int main( void ) {
 	initialise_monitor_handles() ;									// Debugger
@@ -104,10 +108,15 @@ void UsageFault_Handler_c( uint32_t *pBaseStackFrame ) {						// Callee
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 void fun_divide( int x, int y ) {
 =======
 int fun_divide( int x, int y ) {
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+int fun_divide( int x, int y ) {
+
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
 	return ( x / y ) ;
 }
 

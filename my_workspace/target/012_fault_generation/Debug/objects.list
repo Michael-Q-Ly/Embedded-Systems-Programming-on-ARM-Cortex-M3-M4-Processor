@@ -2,6 +2,10 @@
 "./Src/main.o"
 =======
 "./Src/main_1.o"
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
 "./Src/sysmem.o"
 "./Startup/startup_stm32f429zitx.o"

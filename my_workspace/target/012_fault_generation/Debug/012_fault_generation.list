@@ -37,7 +37,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
   7 .fini_array   00000004  08001c40  08001c40  00011c40  2**2
                   CONTENTS, ALLOC, LOAD, DATA
   8 .data         0000006c  20000000  08001c44  00020000  2**2
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
                   CONTENTS, ALLOC, LOAD, DATA
   9 .ccmram       00000000  10000000  10000000  0002006c  2**0
                   CONTENTS
@@ -83,7 +87,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
  20 .comment      00000053  00000000  00000000  0002cccd  2**0
                   CONTENTS, READONLY
  21 .debug_frame  00000d10  00000000  00000000  0002cd20  2**2
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -106,7 +114,11 @@ Disassembly of section .text:
  80001d0:	0800199c 	.word	0x0800199c
 =======
  80001d0:	08001a48 	.word	0x08001a48
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
 
 080001d4 <frame_dummy>:
  80001d4:	b508      	push	{r3, lr}
@@ -122,7 +134,11 @@ Disassembly of section .text:
  80001ec:	0800199c 	.word	0x0800199c
 =======
  80001ec:	08001a48 	.word	0x08001a48
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
 
 080001f0 <memchr>:
  80001f0:	f001 01ff 	and.w	r1, r1, #255	; 0xff
@@ -325,7 +341,11 @@ int main( void ) {
  80002ea:	e7fe      	b.n	80002ea <main+0x4a>
  80002ec:	e000ed24 	.word	0xe000ed24
  80002f0:	e000ed14 	.word	0xe000ed14
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
 
 080002f4 <HardFault_Handler>:
 }
@@ -346,7 +366,11 @@ void HardFault_Handler( void ) {
  8000304:	f000 f916 	bl	8000534 <fwrite>
 =======
  8000304:	f000 f96c 	bl	80005e0 <fwrite>
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
 	while( 1 ) ;
  8000308:	e7fe      	b.n	8000308 <HardFault_Handler+0x14>
  800030a:	bf00      	nop
@@ -355,7 +379,11 @@ void HardFault_Handler( void ) {
  8000310:	080019b4 	.word	0x080019b4
 =======
  8000310:	08001a60 	.word	0x08001a60
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
 
 08000314 <MemManage_Handler>:
 }
@@ -374,7 +402,11 @@ void MemManage_Handler( void ) {
  8000324:	f000 f906 	bl	8000534 <fwrite>
 =======
  8000324:	f000 f95c 	bl	80005e0 <fwrite>
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
 	while( 1 ) ;
  8000328:	e7fe      	b.n	8000328 <MemManage_Handler+0x14>
  800032a:	bf00      	nop
@@ -383,7 +415,11 @@ void MemManage_Handler( void ) {
  8000330:	080019cc 	.word	0x080019cc
 =======
  8000330:	08001a78 	.word	0x08001a78
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
 
 08000334 <BusFault_Handler>:
 }
@@ -402,7 +438,11 @@ void BusFault_Handler( void ) {
  8000344:	f000 f8f6 	bl	8000534 <fwrite>
 =======
  8000344:	f000 f94c 	bl	80005e0 <fwrite>
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
 	while( 1 ) ;
  8000348:	e7fe      	b.n	8000348 <BusFault_Handler+0x14>
  800034a:	bf00      	nop
@@ -411,7 +451,11 @@ void BusFault_Handler( void ) {
  8000350:	080019e4 	.word	0x080019e4
 =======
  8000350:	08001a90 	.word	0x08001a90
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
 
 08000354 <UsageFault_Handler>:
 }
@@ -445,7 +489,11 @@ void UsageFault_Handler_c( uint32_t *pBaseStackFrame ) {						// Callee
  800036a:	60fb      	str	r3, [r7, #12]
 	fprintf( stderr, "Exception: Usagefault\n" ) ;
  800036c:	4b26      	ldr	r3, [pc, #152]	; (8000408 <UsageFault_Handler_c+0xa8>)
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
  800036e:	681b      	ldr	r3, [r3, #0]
  8000370:	68db      	ldr	r3, [r3, #12]
  8000372:	2216      	movs	r2, #22
@@ -456,7 +504,11 @@ void UsageFault_Handler_c( uint32_t *pBaseStackFrame ) {						// Callee
 =======
  8000376:	4825      	ldr	r0, [pc, #148]	; (800040c <UsageFault_Handler_c+0xac>)
  8000378:	f000 f932 	bl	80005e0 <fwrite>
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
 	printf( "UFSR = %lx\n", ( *pUFSR ) & 0xFFFF ) ;							// We only use the first 16 bits, so clear the lower 16 bits with an & 0xFFFF
  800037c:	68fb      	ldr	r3, [r7, #12]
  800037e:	681b      	ldr	r3, [r3, #0]
@@ -579,7 +631,11 @@ int fun_divide( int x, int y ) {
  8000452:	4770      	bx	lr
 
 08000454 <_sbrk>:
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
  *
  * @param incr Memory size
  * @return Pointer to allocated memory
@@ -596,7 +652,11 @@ void *_sbrk(ptrdiff_t incr)
  8000456:	b086      	sub	sp, #24
  8000458:	af00      	add	r7, sp, #0
  800045a:	6078      	str	r0, [r7, #4]
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
   extern uint8_t _end; /* Symbol defined in the linker script */
   extern uint8_t _estack; /* Symbol defined in the linker script */
   extern uint32_t _Min_Stack_Size; /* Symbol defined in the linker script */
@@ -617,7 +677,11 @@ void *_sbrk(ptrdiff_t incr)
   const uint8_t *max_heap = (uint8_t *)stack_limit;
  8000464:	697b      	ldr	r3, [r7, #20]
  8000466:	613b      	str	r3, [r7, #16]
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
   uint8_t *prev_heap_end;
 
   /* Initialize heap end at first call */
@@ -642,7 +706,11 @@ void *_sbrk(ptrdiff_t incr)
  8000470:	4b11      	ldr	r3, [pc, #68]	; (80004b8 <_sbrk+0x64>)
  8000472:	4a12      	ldr	r2, [pc, #72]	; (80004bc <_sbrk+0x68>)
  8000474:	601a      	str	r2, [r3, #0]
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
   }
 
   /* Protect heap from growing into the reserved MSP stack */
@@ -735,7 +803,11 @@ void *_sbrk(ptrdiff_t incr)
  80004bc:	20000150 	.word	0x20000150
 
 080004c0 <Reset_Handler>:
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
 
   .section .text.Reset_Handler
   .weak Reset_Handler
@@ -926,7 +998,11 @@ LoopForever:
  800050c:	20000150 	.word	0x20000150
 
 08000510 <ADC_IRQHandler>:
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
  * @retval : None
 */
   .section .text.Default_Handler,"ax",%progbits
@@ -4249,7 +4325,11 @@ Infinite_Loop:
  800137e:	d102      	bne.n	8001386 <_sbrk_r+0x1a>
  8001380:	682b      	ldr	r3, [r5, #0]
  8001382:	b103      	cbz	r3, 8001386 <_sbrk_r+0x1a>
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
  8001384:	6023      	str	r3, [r4, #0]
  8001386:	bd38      	pop	{r3, r4, r5, pc}
  8001388:	2000014c 	.word	0x2000014c
@@ -5744,4 +5824,8 @@ Infinite_Loop:
  8001a5a:	bc08      	pop	{r3}
  8001a5c:	469e      	mov	lr, r3
  8001a5e:	4770      	bx	lr
+<<<<<<< HEAD
 >>>>>>> a7e49dd (Add Example 12 (two versions):)
+=======
+>>>>>>> 013_svc_number
+>>>>>>> 07fc6d4bb3630419988721ba31b856ce3b86637e
