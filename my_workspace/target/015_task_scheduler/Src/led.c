@@ -24,7 +24,7 @@ void led_init_all( void ) {
 	led_off( LED_RED ) ;
 #else
 	*pGpioGModeReg |= ( 1 << ( 2 * LED_GREEN ) ) ;
-	*pGpioGModeReg |= ( 1 << ( 2 * LED_ORANGE ) ) ;             // TODO: Configure registers
+	*pGpioGModeReg |= ( 1 << ( 2 * LED_ORANGE ) ) ;
 	*pGpioGModeReg |= ( 1 << ( 2 * LED_RED ) ) ;
 	*pGpioGModeReg |= ( 1 << ( 2 * LED_BLUE ) ) ;
 
@@ -36,7 +36,6 @@ void led_init_all( void ) {
 }
 
 // Software delay; wastes clock cycles
-// TODO: Maybe use a hardware timer instead in the future
 /*
  * This function creates a software delay for the LEDs */
 void delay( uint32_t count ) {

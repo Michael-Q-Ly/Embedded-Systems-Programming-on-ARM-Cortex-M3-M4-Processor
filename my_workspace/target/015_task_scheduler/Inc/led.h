@@ -33,6 +33,6 @@
 extern void led_init_all( void ) ;
 extern void led_on( uint8_t led_no ) ;
 extern void led_off( uint8_t led_no ) ;
-extern void delay( uint32_t count ) ;
+// extern void delay( uint32_t count ) ;
 
 #endif /* LED_H_ */

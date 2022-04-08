@@ -10,17 +10,16 @@
 #include <stdio.h>
 #include <stdint.h>
 
-
-uint8_t current_task = 1 ;											// Task1 is running
+uint8_t current_task = 1 ;										// Task1 is running
 uint32_t g_tick_count = 0 ;
 
 /* Function Prototypes */
-extern void initialise_monitor_handles( void ) ;								// Debugger
+extern void initialise_monitor_handles( void ) ;							// Debugger
 void idle_task( void ) ;
-void task1_handler( void ) ;                                                    				// This is task1
-void task2_handler( void ) ;                                                    				// This is task2
-void task3_handler( void ) ;                                                    				// This is task3
-void task4_handler( void ) ;                                                    				// This is task4
+void task1_handler( void ) ;                                                    			// This is task1
+void task2_handler( void ) ;                                                    			// This is task2
+void task3_handler( void ) ;                                                    			// This is task3
+void task4_handler( void ) ;                                                    			// This is task4
 
 __attribute__( (naked) ) void init_scheduler_stack( uint32_t sched_top_of_stack ) ;
 void init_tasks_stack( void ) ;
@@ -29,7 +28,7 @@ void enable_processor_faults( void ) ;
 __attribute__( (naked) ) void switch_sp_to_psp( void ) ;
 uint32_t get_psp_value( void ) ;
 void update_next_task( void ) ;
-__attribute__( (naked) ) void PendSV_Handler( void ) ;											// This is our scheduler--what we use to do context switching
+__attribute__( (naked) ) void PendSV_Handler( void ) ;							// This is our scheduler--what we use to do context switching
 void SysTick_Handler( void ) ;
 
 void HardFault_Handler( void ) ;
@@ -51,7 +50,7 @@ typedef struct {
 TCB_t user_tasks[MAX_TASKS] ;
 
 int main(void) {
-	initialise_monitor_handles() ;                                          				// Debugger
+	initialise_monitor_handles() ;                                          			// Debugger
 
 	enable_processor_faults() ;
 
@@ -63,8 +62,8 @@ int main(void) {
 	// Task stack initialization to store the dummy frames  
 	init_tasks_stack() ;
 
-    // Initialize all of the LEDs
-    led_init_all() ;
+	// Initialize all of the LEDs
+	led_init_all() ;
 
 	// Generate SysTick timer exception
 	init_systick_timer( TICK_HZ ) ;
@@ -85,40 +84,40 @@ void idle_task( void ) {
 void task1_handler( void ) {
 	while ( 1 ) {
 		printf( "This is task1\n" ) ;
-        led_on( LED_GREEN ) ;
-        delay( DELAY_COUNT_250MS ) ;
-        led_off( LED_GREEN ) ;
-        delay( DELAY_COUNT_250MS ) ;
+		led_on( LED_GREEN ) ;
+		task_delay( 1000 ) ;
+		led_off( LED_GREEN ) ;
+		task_delay( 1000 ) ;
 	}
 }
 
 void task2_handler( void ) {
 	while ( 1 ) {
 		printf( "This is task2\n" ) ;
-        led_on( LED_RED ) ;
-        delay( DELAY_COUNT_1S ) ;
-        led_off( LED_RED ) ;
-        delay( DELAY_COUNT_1S ) ;
+		led_on( LED_RED ) ;
+		task_delay( 500 ) ;
+		led_off( LED_RED ) ;
+		task_delay( 500 ) ;
 	}
 }
 
 void task3_handler( void ) {
 	while ( 1 ) {
 		printf( "This is task3\n" ) ;
-        led_on( LED_GREEN ) ;
-        delay( DELAY_COUNT_125MS ) ;
-        led_off( LED_RED ) ;
-        delay( DELAY_COUNT_1S ) ;
+		led_on( LED_GREEN ) ;
+		task_delay( 250 ) ;
+		led_off( LED_RED ) ;
+		task_delay( 250 ) ;
 	}
 }
 
 void task4_handler( void ) {
 	while ( 1 ) {
 		printf( "This is task4\n" ) ;
-        led_on( LED_RED ) ;
-        delay( DELAY_COUNT_1MS ) ;
-        led_off( LED_RED ) ;
-        delay( DELAY_COUNT_1S ) ;
+		led_on( LED_RED ) ;
+		task_delay( 155 ) ;
+		led_off( LED_RED ) ;
+		task_delay( 155 ) ;
 	}
 }
 
@@ -155,6 +154,7 @@ __attribute__( (naked) ) void init_scheduler_stack( uint32_t sched_top_of_stack 
 }
 
 void init_tasks_stack( void ) {
+	// All tasks should start in the ready state
 	user_tasks[0].current_state = TASK_READY_STATE ;
 	user_tasks[1].current_state = TASK_READY_STATE ;
 	user_tasks[2].current_state = TASK_READY_STATE ;
@@ -167,6 +167,7 @@ void init_tasks_stack( void ) {
 	user_tasks[3].psp_value = T3_STACK_START ;
 	user_tasks[4].psp_value = T4_STACK_START ;
 
+	// User function pointers to run tasks; review function pointers if you do not understand this part
 	user_tasks[0].task_handler = idle_task ;
 	user_tasks[1].task_handler = task1_handler ;
 	user_tasks[2].task_handler = task2_handler ;
@@ -213,8 +214,21 @@ void save_psp_value( uint32_t current_psp_value ) {
 }
 
 void update_next_task( void ) {
-	current_task++ ;
-	current_task %= MAX_TASKS ;									// Task 0 through 3
+	int state = TASK_BLOCKED_STATE ;
+
+	for ( int i = 0 ; i < MAX_TASKS ; i++ ) {
+		current_task++ ;
+		current_task %= MAX_TASKS ;								// Task 0 through MAX_TASKS-1
+		state = user_tasks[current_task].current_state ;
+		if (    ( state == TASK_READY_STATE ) && ( current_task != 0 )    ) {			// Ignore idle_task
+			break ;
+		}
+	}
+
+	// If all states are blocked (not ready), we know we are in idle_task
+	if ( state != TASK_READY_STATE ) {
+		current_task = 0 ;
+	}
 }
 
 __attribute__( (naked) ) void switch_sp_to_psp( void ) {
@@ -241,18 +255,27 @@ __attribute__( (naked) ) void switch_sp_to_psp( void ) {
 }
 
 void schedule( void ) {
-    // Pend the PendSV exception
-    uint32_t *pICSR = ( uint32_t* )0xE000ED04 ;
-    *pICSR |= ( 1 << 28 ) ;
+	// Pend the PendSV exception
+	uint32_t *pICSR = ( uint32_t* )0xE000ED04 ;
+	*pICSR |= ( 1 << 28 ) ;
 }
 
 void task_delay( uint32_t tick_count ) {
-    // Only block the user tasks
-    if ( current_task ) {
-        user_tasks[current_task].block_count = g_tick_count + tick_count ;
-        user_tasks[current_task].current_state = TASK_BLOCKED_STATE ;
-        schedule() ;
-    }
+	/*
+	 * To avoid a race condition for shared memory, disable then reenable interrupts
+	 */
+	// Disable all interrupts
+	INTERRUPT_DISABLE() ;
+
+	// Only block the user tasks
+	if ( current_task ) {
+		user_tasks[current_task].block_count = g_tick_count + tick_count ;
+		user_tasks[current_task].current_state = TASK_BLOCKED_STATE ;
+		schedule() ;
+	}
+
+	// Enable interrupts
+	INTERRUPT_ENABLE() ;
 }
 
 __attribute__( (naked) ) void PendSV_Handler( void ) {
@@ -299,26 +322,27 @@ __attribute__( (naked) ) void PendSV_Handler( void ) {
 	 * Finally, we do a branch indirect LR so that we can return to main()
 	 */
 }
+
 void update_global_tick_count( void ) {
-    g_tick_count++ ;
+	g_tick_count++ ;
 }
 
 void unblock_tasks( void ) {
-    for ( int i = 1 ; i < MAX_TASKS ; i++ ) {
-        if ( user_tasks[i].current_state != TASK_READY_STATE ) {
-            if ( user_tasks[i].block_count == g_tick_count ) {
-                user_tasks[i].current_state = TASK_READY_STATE ;
-            } /* if ( user_tasks[i]. block_count == g_tick_count ) */
-        } /* if ( user_tasks[i].current_state != TASK_READY_STATE ) */
-    } /* END FOR */
+	for ( int i = 1 ; i < MAX_TASKS ; i++ ) {
+		if ( user_tasks[i].current_state != TASK_READY_STATE ) {
+			if ( user_tasks[i].block_count == g_tick_count ) {
+				user_tasks[i].current_state = TASK_READY_STATE ;
+			} /* if ( user_tasks[i]. block_count == g_tick_count ) */
+		} /* if ( user_tasks[i].current_state != TASK_READY_STATE ) */
+	} /* END FOR */
 }
 
 void SysTick_Handler( void ) {
-    uint32_t *pICSR = ( uint32_t* )0xE000ED04 ;
-    update_global_tick_count() ;
-    unblock_tasks() ;
-    // Pend the PendSV exception
-    *pICSR |= ( 1 << 28 ) ;
+	uint32_t *pICSR = ( uint32_t* )0xE000ED04 ;
+	update_global_tick_count() ;
+	unblock_tasks() ;
+	// Pend the PendSV exception
+	*pICSR |= ( 1 << 28 ) ;
 }
 
 // 2. Implement the fault handlers
@@ -336,4 +360,3 @@ void BusFault_Handler( void ) {
 	fprintf( stderr, "Exception: Busfault\n" ) ;
 	while( 1 ) ;
 }
-
