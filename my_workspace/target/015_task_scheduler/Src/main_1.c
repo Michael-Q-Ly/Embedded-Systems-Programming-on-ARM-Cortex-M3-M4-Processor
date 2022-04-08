@@ -29,13 +29,17 @@ void enable_processor_faults( void ) ;
 __attribute__( (naked) ) void switch_sp_to_psp( void ) ;
 uint32_t get_psp_value( void ) ;
 void update_next_task( void ) ;
-__attribute__( (naked) ) void SysTick_Handler( void ) ;											// This is our scheduler--what we use to do context switching
+__attribute__( (naked) ) void PendSV_Handler( void ) ;											// This is our scheduler--what we use to do context switching
+void SysTick_Handler( void ) ;
 
 void HardFault_Handler( void ) ;
 void MemManage_Handler( void ) ;
 void BusFault_Handler( void ) ;
 
 void task_delay( uint32_t tick_count ) ;
+void schedule( void ) ;
+void update_global_tick_count( void ) ;
+void unblock_tasks( void ) ;
 
 typedef struct {
 	uint32_t psp_value ;
@@ -151,11 +155,11 @@ __attribute__( (naked) ) void init_scheduler_stack( uint32_t sched_top_of_stack 
 }
 
 void init_tasks_stack( void ) {
-	user_tasks[0].current_state = TASK_RUNNING_STATE ;
-	user_tasks[1].current_state = TASK_RUNNING_STATE ;
-	user_tasks[2].current_state = TASK_RUNNING_STATE ;
-	user_tasks[3].current_state = TASK_RUNNING_STATE ;
-	user_tasks[4].current_state = TASK_RUNNING_STATE ;
+	user_tasks[0].current_state = TASK_READY_STATE ;
+	user_tasks[1].current_state = TASK_READY_STATE ;
+	user_tasks[2].current_state = TASK_READY_STATE ;
+	user_tasks[3].current_state = TASK_READY_STATE ;
+	user_tasks[4].current_state = TASK_READY_STATE ;
 
 	user_tasks[0].psp_value = IDLE_STACK_START ;
 	user_tasks[1].psp_value = T1_STACK_START ;
@@ -236,13 +240,22 @@ __attribute__( (naked) ) void switch_sp_to_psp( void ) {
 	__asm volatile ( "BX LR" ) ;									// LR will be copied into PC, which takes us back to main()
 }
 
-void task_delay( uint32_t tick_count ) {
-	user_tasks[current_task].block_count = g_tick_count + tick_count ;
-	user_tasks[current_task].current_state = TASK_BLOCKED_STATE ;
+void schedule( void ) {
+    // Pend the PendSV exception
+    uint32_t *pICSR = ( uint32_t* )0xE000ED04 ;
+    *pICSR |= ( 1 << 28 ) ;
 }
 
-__attribute__( (naked) ) void SysTick_Handler( void ) {
+void task_delay( uint32_t tick_count ) {
+    // Only block the user tasks
+    if ( current_task ) {
+        user_tasks[current_task].block_count = g_tick_count + tick_count ;
+        user_tasks[current_task].current_state = TASK_BLOCKED_STATE ;
+        schedule() ;
+    }
+}
 
+__attribute__( (naked) ) void PendSV_Handler( void ) {
 	/* Save the context of current task */
 
 	// 1. Get current running task's PSP value
@@ -285,6 +298,27 @@ __attribute__( (naked) ) void SysTick_Handler( void ) {
 	 * and then POP LR.
 	 * Finally, we do a branch indirect LR so that we can return to main()
 	 */
+}
+void update_global_tick_count( void ) {
+    g_tick_count++ ;
+}
+
+void unblock_tasks( void ) {
+    for ( int i = 1 ; i < MAX_TASKS ; i++ ) {
+        if ( user_tasks[i].current_state != TASK_READY_STATE ) {
+            if ( user_tasks[i].block_count == g_tick_count ) {
+                user_tasks[i].current_state = TASK_READY_STATE ;
+            } /* if ( user_tasks[i]. block_count == g_tick_count ) */
+        } /* if ( user_tasks[i].current_state != TASK_READY_STATE ) */
+    } /* END FOR */
+}
+
+void SysTick_Handler( void ) {
+    uint32_t *pICSR = ( uint32_t* )0xE000ED04 ;
+    update_global_tick_count() ;
+    unblock_tasks() ;
+    // Pend the PendSV exception
+    *pICSR |= ( 1 << 28 ) ;
 }
 
 // 2. Implement the fault handlers
