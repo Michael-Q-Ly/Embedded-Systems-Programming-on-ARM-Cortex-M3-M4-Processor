@@ -113,15 +113,9 @@ void UART8_Handler( void )			__attribute__(    (  weak, alias( "Default_Handler"
 void SPI4_Handler( void )			__attribute__(    (  weak, alias( "Default_Handler" )  )    ) ;
 void SPI5_Handler( void )			__attribute__(    (  weak, alias( "Default_Handler" )  )    ) ;
 void SPI6_Handler( void )			__attribute__(    (  weak, alias( "Default_Handler" )  )    ) ;
-void _Handler( void )				__attribute__(    (  weak, alias( "Default_Handler" )  )    ) ;
 void SAI1_Handler( void )			__attribute__(    (  weak, alias( "Default_Handler" )  )    ) ;
 void LCD_TFT_Handler( void )			__attribute__(    (  weak, alias( "Default_Handler" )  )    ) ;
 void LCD_TFT_Error_Handler( void )		__attribute__(    (  weak, alias( "Default_Handler" )  )    ) ;
-void DMA2D_Handler( void )			__attribute__(    (  weak, alias( "Default_Handler" )  )    ) ;
-void _Handler( void )				__attribute__(    (  weak, alias( "Default_Handler" )  )    ) ;
-void _Handler( void )				__attribute__(    (  weak, alias( "Default_Handler" )  )    ) ;
-void _Handler( void )				__attribute__(    (  weak, alias( "Default_Handler" )  )    ) ;
-void _Handler( void )				__attribute__(    (  weak, alias( "Default_Handler" )  )    ) ;
 
 // Create an array to hold MSP and handler's addresses
 uint32_t vectors[] __attribute__(    (  section( ".isr_vector" )  )    ) = {
@@ -237,4 +231,11 @@ void Default_Handler( void ) {
 }
 
 void Reset_Handler( void ) {
+	// Copy .data section to SRAM
+
+	// Initialize the .bss section to zero in SRAM
+
+	//// Call init function of std. library
+
+	// Call main()
 }
