@@ -5,12 +5,13 @@
 PROG = scheduler
 CC = arm-none-eabi-gcc
 MACH = cortex-m4
+OBJS = main.o led.o stm32_startup.o
 INCDIR = ../Inc
 CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -O0 -Wall -I$(INCDIR)
-OBJS = main.o led.o stm32_startup.o
+LDFLAGS = -nostdlib -T stm32_ls.ld
 
 .PHONY: all
-all: $(OBJS)
+all: $(OBJS) final.elf
 
 main.o: main.c
 	$(CC) $(CFLAGS) -o $@ $^
@@ -20,6 +21,9 @@ led.o: led.c
 
 stm32_startup.o: stm32_startup.c
 	$(CC) $(CFLAGS) -o $@ $^
+
+final.elf: $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $^
 
 .PHONY: clean
 clean:
