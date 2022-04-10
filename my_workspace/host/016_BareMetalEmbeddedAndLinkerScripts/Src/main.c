@@ -12,6 +12,9 @@
 
 uint8_t current_task = 1 ;										// Task1 is running
 uint32_t g_tick_count = 0 ;
+uint32_t const const_v_1 = 100 ;
+uint32_t const const_v_2 = 100 ;
+uint8_t const const_v_3 = 100 ;
 
 /* Function Prototypes */
 // extern void initialise_monitor_handles( void ) ;							// Debugger
