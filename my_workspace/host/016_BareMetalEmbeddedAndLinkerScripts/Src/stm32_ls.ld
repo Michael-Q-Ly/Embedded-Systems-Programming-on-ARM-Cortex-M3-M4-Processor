@@ -12,18 +12,22 @@ SECTIONS {
 	*(.isr_vector)
 	*(.text)
 	*(.rodata)
-	_etext = .;
+	. = ALIGN(4) ;
+	_etext = . ;
     } > FLASH				/* Equivalently: >FLASH AT> FLASH */
 
     .data : {				/* .data section is relocatable and must be stored in flash. The startup code has to copy this section from FLASH  to SRAM */
-	_sdata = .;
+	_sdata = . ;
 	*(.data)
-	_edata = .;
+	. = ALIGN(4) ;
+	_edata = . ;
     } > SRAM AT > FLASH			/* .data's absolute location falls in SRAM, but it is stored in FLASH, its load address */
 
     .bss : {				/* Uninitialized data */
-	_sbss = .;
+	_sbss = . ;
 	*(.bss)
-	_ebss = .;
+	*(COMMON)
+	. = ALIGN(4) ;
+	_ebss = . ;
     } > SRAM
 }

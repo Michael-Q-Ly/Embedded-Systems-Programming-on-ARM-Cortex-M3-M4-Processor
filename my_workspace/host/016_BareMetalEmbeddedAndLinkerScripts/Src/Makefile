@@ -8,7 +8,7 @@ MACH = cortex-m4
 OBJS = main.o led.o stm32_startup.o
 INCDIR = ../Inc
 CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -O0 -Wall -I$(INCDIR)
-LDFLAGS = -nostdlib -T stm32_ls.ld
+LDFLAGS = -nostdlib -T stm32_ls.ld -Wl,-Map=final.map -I../Inc
 
 .PHONY: all
 all: $(OBJS) final.elf
