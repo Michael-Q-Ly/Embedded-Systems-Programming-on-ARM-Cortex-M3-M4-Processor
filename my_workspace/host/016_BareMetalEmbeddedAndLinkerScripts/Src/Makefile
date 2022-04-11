@@ -25,6 +25,10 @@ stm32_startup.o: stm32_startup.c
 final.elf: $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^
 
+.PHONY: load
+load:
+	openocd -f board/stm32f4discovery.cfg
+
 .PHONY: clean
 clean:
 	rm -rf *.o *.elf *.exe
