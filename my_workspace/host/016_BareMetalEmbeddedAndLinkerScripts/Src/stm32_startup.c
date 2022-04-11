@@ -26,6 +26,9 @@ extern uint32_t _ebss ;
 // Prototype of main
 int main( void ) ;
 
+// Prototype of stdlib
+void __libc_init_array( void ) ;
+
 void Reset_Handler( void ) ;
 void NMI_Handler( void )			__attribute__(    (  weak, alias( "Default_Handler" )  )    ) ;
 void HardFault_Handler( void )			__attribute__(    (  weak, alias( "Default_Handler" )  )    ) ;
@@ -258,7 +261,8 @@ void Reset_Handler( void ) {
 		*pDst++ = 0 ;
 	}
 
-	//// Call init function of std. library
+	// Call init function of std. library
+    __libc_init_array() ;
 
 	// Call main()
 	main() ;

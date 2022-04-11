@@ -43,6 +43,10 @@ void schedule( void ) ;
 void update_global_tick_count( void ) ;
 void unblock_tasks( void ) ;
 
+void NMI_Handler( void ) {
+    // Implement your real logic of handling NMI here
+}
+
 typedef struct {
 	uint32_t psp_value ;
 	uint32_t block_count ;
@@ -54,6 +58,9 @@ TCB_t user_tasks[MAX_TASKS] ;
 
 int main(void) {
 	// initialise_monitor_handles() ;                                          			// Debugger
+
+    // Test printf function from stdlib
+    printf( "Implementation of simple task scheduler\n" ) ;
 
 	enable_processor_faults() ;
 
