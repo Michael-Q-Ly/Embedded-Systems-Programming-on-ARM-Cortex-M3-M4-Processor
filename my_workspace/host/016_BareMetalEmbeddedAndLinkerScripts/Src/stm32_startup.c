@@ -22,6 +22,7 @@ extern uint32_t _sdata ;
 extern uint32_t _edata ;
 extern uint32_t _sbss ;
 extern uint32_t _ebss ;
+extern uint32_t _la_data ;
 
 // Prototype of main
 int main( void ) ;
@@ -248,7 +249,7 @@ void Reset_Handler( void ) {
 	uint32_t size = ( uint32_t )&_edata - ( uint32_t )&_sdata ;			// Subtract addresses to get size
 
 	uint8_t *pDst = ( uint8_t* )&_sdata ;			// SRAM
-	uint8_t *pSrc = ( uint8_t* )&_etext ;			// Flash
+	uint8_t *pSrc = ( uint8_t* )&_la_data ;			// Flash
 
 	for ( uint32_t i = 0 ; i < size ; i++ ) {
 		*pDst++ = *pSrc++ ;

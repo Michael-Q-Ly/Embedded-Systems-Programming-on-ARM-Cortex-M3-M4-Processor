@@ -20,6 +20,8 @@ SECTIONS {
 	_etext = . ;
     } > FLASH				/* Equivalently: >FLASH AT> FLASH */
 
+    _la_data = LOADADDR(.data) ;	/* Assign the load address */
+
     .data : {				/* .data section is relocatable and must be stored in flash. The startup code has to copy this section from FLASH  to SRAM */
 	_sdata = . ;
 	*(.data)
