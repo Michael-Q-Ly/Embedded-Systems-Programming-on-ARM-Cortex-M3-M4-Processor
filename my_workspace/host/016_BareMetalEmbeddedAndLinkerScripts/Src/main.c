@@ -86,7 +86,7 @@ void idle_task( void ) {
 
 void task1_handler( void ) {
 	while ( 1 ) {
-		// printf( "This is task1\n" ) ;
+		printf( "This is task1\n" ) ;
 		led_on( LED_GREEN ) ;
 		task_delay( 1000 ) ;
 		led_off( LED_GREEN ) ;
@@ -96,7 +96,7 @@ void task1_handler( void ) {
 
 void task2_handler( void ) {
 	while ( 1 ) {
-		// printf( "This is task2\n" ) ;
+		printf( "This is task2\n" ) ;
 		led_on( LED_RED ) ;
 		task_delay( 500 ) ;
 		led_off( LED_RED ) ;
@@ -106,7 +106,7 @@ void task2_handler( void ) {
 
 void task3_handler( void ) {
 	while ( 1 ) {
-		// printf( "This is task3\n" ) ;
+		printf( "This is task3\n" ) ;
 		led_on( LED_GREEN ) ;
 		task_delay( 250 ) ;
 		led_off( LED_RED ) ;
@@ -116,7 +116,7 @@ void task3_handler( void ) {
 
 void task4_handler( void ) {
 	while ( 1 ) {
-		// printf( "This is task4\n" ) ;
+		printf( "This is task4\n" ) ;
 		led_on( LED_RED ) ;
 		task_delay( 155 ) ;
 		led_off( LED_RED ) ;
@@ -350,16 +350,16 @@ void SysTick_Handler( void ) {
 
 // 2. Implement the fault handlers
 void HardFault_Handler( void ) {
-	// fprintf( stderr, "Exception: Hardfault\n" ) ;
+	fprintf( stderr, "Exception: Hardfault\n" ) ;
 	while( 1 ) ;
 }
 
 void MemManage_Handler( void ) {
-	// fprintf( stderr, "Exception: MemManage\n" ) ;
+	fprintf( stderr, "Exception: MemManage\n" ) ;
 	while( 1 ) ;
 }
 
 void BusFault_Handler( void ) {
-	// fprintf( stderr, "Exception: Busfault\n" ) ;
+	fprintf( stderr, "Exception: Busfault\n" ) ;
 	while( 1 ) ;
 }
