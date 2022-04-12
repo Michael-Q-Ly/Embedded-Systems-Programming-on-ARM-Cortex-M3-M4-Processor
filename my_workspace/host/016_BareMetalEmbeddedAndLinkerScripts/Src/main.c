@@ -17,7 +17,7 @@ uint32_t const const_v_2 = 100 ;
 uint8_t const const_v_3 = 100 ;
 
 /* Function Prototypes */
-// extern void initialise_monitor_handles( void ) ;							// Debugger
+extern void initialise_monitor_handles( void ) ;							// Debugger
 void idle_task( void ) ;
 void task1_handler( void ) ;                                                    			// This is task1
 void task2_handler( void ) ;                                                    			// This is task2
@@ -57,7 +57,7 @@ typedef struct {
 TCB_t user_tasks[MAX_TASKS] ;
 
 int main(void) {
-	// initialise_monitor_handles() ;                                          			// Debugger
+	initialise_monitor_handles() ;                                          			// Debugger
 
     // Test printf function from stdlib
     printf( "Implementation of simple task scheduler\n" ) ;

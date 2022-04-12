@@ -41,5 +41,6 @@ SECTIONS {
     __bss_end__ = _ebss ;
     . = ALIGN(4) ;
     end = . ;				/* End of heap; heap is located right after bss section */
+    __end__ = . ;			/* Same as end; this is for semihosting */
     } > SRAM
 }

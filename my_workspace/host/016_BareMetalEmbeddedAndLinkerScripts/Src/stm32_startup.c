@@ -248,8 +248,8 @@ void Reset_Handler( void ) {
 	// Copy .data section to SRAM
 	uint32_t size = ( uint32_t )&_edata - ( uint32_t )&_sdata ;			// Subtract addresses to get size
 
-	uint8_t *pDst = ( uint8_t* )&_sdata ;			// SRAM
-	uint8_t *pSrc = ( uint8_t* )&_la_data ;			// Flash
+	uint8_t *pDst = ( uint8_t* )&_sdata ;						// SRAM
+	uint8_t *pSrc = ( uint8_t* )&_la_data ;						// Flash
 
 	for ( uint32_t i = 0 ; i < size ; i++ ) {
 		*pDst++ = *pSrc++ ;
@@ -263,7 +263,7 @@ void Reset_Handler( void ) {
 	}
 
 	// Call init function of std. library
-    __libc_init_array() ;
+	__libc_init_array() ;
 
 	// Call main()
 	main() ;
